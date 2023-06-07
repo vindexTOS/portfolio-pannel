@@ -2,7 +2,9 @@ import { useContext, createContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import jwt from 'jwt-decode'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+
 type Cell = {
   setPassword: React.Dispatch<React.SetStateAction<string>>
   setEmail: React.Dispatch<React.SetStateAction<string>>
@@ -24,6 +26,12 @@ export const ContextProvider = ({
   const [user, setUser] = useState<any>()
   const [password, setPassword] = useState<string>('')
   const [email, setEmail] = useState<string>('')
+  const lastLocationStorage = localStorage.getItem('pageData')
+  useEffect(() => {
+    navigate(`${lastLocationStorage}`)
+  }, [])
+  const [lastLocatoin, setLastLocation] = useState<string>('')
+  const location = useLocation()
   const cookies = new Cookies()
   const login = async () => {
     await axios
@@ -46,17 +54,25 @@ export const ContextProvider = ({
   }
   const logout = () => {
     cookies.remove('jwt_authorization')
+    localStorage.clear()
+
     navigate('/login')
   }
   useEffect(() => {
     console.log(user)
   }, [user])
+
+  useEffect(() => {
+    localStorage.setItem('pageData', location.pathname)
+  }, [location])
+
   useEffect(() => {
     const token = cookies.get('jwt_authorization')
-
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    axios.defaults.headers.common['Content-Type'] = 'application/json'
-    setUser(jwt(token))
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      axios.defaults.headers.common['Content-Type'] = 'application/json'
+      setUser(jwt(token))
+    }
   }, [])
 
   const postDummydata = async () => {
