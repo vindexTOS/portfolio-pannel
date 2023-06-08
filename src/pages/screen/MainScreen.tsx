@@ -5,7 +5,7 @@ import { UseMainContext } from '../../context'
 const MainScreen = () => {
   const { user, logout } = UseMainContext()
   const style = {
-    mainDiv: ` bg-gray-300 w-[80%] h-[100%] rounded-[12px] shadow-md `,
+    mainDiv: ` bg-gray-300 w-[80%] h-[100%] z-30 rounded-[12px] shadow-md `,
     section: `flex gap-2 px-10 py-5 justify-end shadow-md `,
   }
   return (

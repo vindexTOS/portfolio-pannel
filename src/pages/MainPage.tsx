@@ -7,7 +7,7 @@ const MainPage = () => {
   const { user, logout } = UseMainContext()
   if (user && user.user) {
     const style = {
-      section: `flex w-[100wh] h-[100vh] p-20 justify-between`,
+      section: `flex w-[100wh] h-[100%] p-20 justify-between`,
     }
     return (
       <section className={style.section}>

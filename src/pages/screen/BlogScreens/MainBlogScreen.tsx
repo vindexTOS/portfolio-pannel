@@ -8,8 +8,8 @@ const MainBlogScreen = () => {
   const style = {
     section: `flex h-[100%] relative  `,
 
-    nav: ` flex flex-col w-[200px] shadow-md h-[90%] items-start  py-20   `,
-    outlet: `w-[100%] h-[100%]`,
+    nav: ` flex flex-col w-[200px]   h-[100%] items-start  py-20   `,
+    outlet: `w-[100%] h-[100%] py-5`,
     icon: `absolute text-[1.6rem] left-2 top-2 cursor-pointer`,
     link: `hover:bg-gray-200 w-[100%] text-center py-1 duration-300`,
   }
@@ -29,15 +29,14 @@ const MainBlogScreen = () => {
       <m.nav
         animate={{
           visibility: navDrop ? 'visible' : 'hidden',
-          y: navDrop ? 0 : 400,
         }}
         className={style.nav}
       >
         <Link className={style.link} to="make">
-          Make Post
+          Make post
         </Link>
         <Link className={style.link} to="posts">
-          Posts
+          Post
         </Link>
       </m.nav>
       <section className={style.outlet}>

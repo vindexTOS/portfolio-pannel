@@ -1,12 +1,22 @@
-import React from 'react'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { FetchPosts } from '../../../API/Blog-API'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { useEffect } from 'react'
+import { BlogPostType } from '../../../types/blog-post-types'
+import PostComponent from './Post_component'
 const PostsScreen = () => {
-  const url = 'http://localhost:3000/blog'
   const blogPosts = useQuery({
     queryKey: ['blog'],
-    queryFn: async () => await axios.get(url).then((res) => res.data),
+    queryFn: FetchPosts,
+    staleTime: 30000,
+    refetchOnMount: true,
+    onError: () => {
+      console.log('ERROR', blogPosts.error)
+    },
   })
+  useEffect(() => {
+    blogPosts.refetch()
+  }, [])
   if (blogPosts.isLoading) {
     return <h1>Loading...</h1>
   }
@@ -15,11 +25,11 @@ const PostsScreen = () => {
     return <pre>{JSON.stringify(blogPosts.error)}</pre>
   }
   return (
-    <div onClick={() => console.log(blogPosts)}>
-      {blogPosts.data.blogPosts.map((val: any) => {
-        return <div>{val.title}</div>
+    <div className="overflo" onClick={() => console.log(blogPosts)}>
+      {blogPosts.data.blogPosts.map((val: BlogPostType) => {
+        return <PostComponent key={val._id} {...val} />
       })}
-      as
+      <ReactQueryDevtools />
     </div>
   )
 }
