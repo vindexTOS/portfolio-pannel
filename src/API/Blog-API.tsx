@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { BlogPostType } from '../types/blog-post-types'
 import axios from 'axios'
 
 export const FetchPosts = async () => {
@@ -9,8 +10,14 @@ export const FetchPosts = async () => {
   return posts
 }
 
-export const MakePost = (newPost: any) => {
+export const MakePost = async (newPost: BlogPostType) => {
   const url = 'http://localhost:3000/blog/post'
-  const post = axios.post(url, newPost)
+  const post = await axios.post(url, newPost)
   return post
+}
+
+export const DeletePost = async (id: string) => {
+  const url = `http://localhost:3000/blog/post/${id}`
+  const deletePost = await axios.delete(url)
+  return deletePost
 }

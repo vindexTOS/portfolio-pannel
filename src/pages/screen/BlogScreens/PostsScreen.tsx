@@ -24,8 +24,12 @@ const PostsScreen = () => {
   if (blogPosts.isError) {
     return <pre>{JSON.stringify(blogPosts.error)}</pre>
   }
+
+  const style = {
+    mainDiv: `h-[550px] overflow-y-scroll flex  flex-col gap-5`,
+  }
   return (
-    <div className="overflo" onClick={() => console.log(blogPosts)}>
+    <div className={style.mainDiv} onClick={() => console.log(blogPosts)}>
       {blogPosts.data.blogPosts.map((val: BlogPostType) => {
         return <PostComponent key={val._id} {...val} />
       })}

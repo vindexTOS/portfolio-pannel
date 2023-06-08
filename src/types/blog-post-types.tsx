@@ -2,9 +2,9 @@ export type BlogPostType = {
   title: string
   dec: string
   img: string
-  time: Date
+  time?: Date
   type: string
-  _id: string
+  _id?: string
 }
 
 export type BlogPostDataType = {
