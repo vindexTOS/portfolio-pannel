@@ -25,6 +25,7 @@ type Cell = {
   imgUrl: string
   setHtmlImg: React.Dispatch<React.SetStateAction<String | null>>
   navigate: NavigateFunction
+  setImgUrl: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Context = createContext<Cell | null>(null)
@@ -95,7 +96,6 @@ export const ContextProvider = ({
   /// login and navigation ///////////////////////////////////////////////////////////////
   const location = useLocation()
   const cookies = new Cookies()
-  const token = cookies.get('jwt_authorization')
 
   const navigate = useNavigate()
 
@@ -106,6 +106,8 @@ export const ContextProvider = ({
     if (lastLocationStorage !== `/null`) {
       navigate(`${lastLocationStorage}`)
     }
+    const token = cookies.get('jwt_authorization')
+
     // if user token does not exists in cookies navigate user to login page
     if (!token) {
       navigate('/login')
@@ -119,6 +121,8 @@ export const ContextProvider = ({
     }
   }, [location])
   // re setting headers every time browser re freshes for back end authentication
+  const token = cookies.get('jwt_authorization')
+
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -155,8 +159,8 @@ export const ContextProvider = ({
   const logout = () => {
     cookies.remove('jwt_authorization')
     localStorage.clear()
-
     navigate('/login')
+    console.log('log out')
   }
   // useEffect(() => {
   //   console.log(user)
@@ -191,6 +195,7 @@ export const ContextProvider = ({
         htmlImg,
         uploadFileToFirebaseStorage,
         imgUrl,
+        setImgUrl,
         setHtmlImg,
         navigate,
       }}

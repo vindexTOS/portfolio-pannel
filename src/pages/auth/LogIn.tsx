@@ -2,15 +2,18 @@ import React from 'react'
 import { UseMainContext } from '../../context'
 import { useQuery } from '@tanstack/react-query'
 import { Navigate } from 'react-router-dom'
-
+import Cookies from 'universal-cookie'
 const LogIn = () => {
+  const cookies = new Cookies()
   const { setPassword, setEmail, login, user } = UseMainContext()
   const style = {
     mainDiv: ` w-[100vw] h-[100vh] flex items-center justify-center`,
     input: `input input-bordered input-info w-full max-w-xs`,
     btn: `btn btn-outline btn-accent`,
   }
-  if (!user) {
+  const token = cookies.get('jwt_authorization')
+
+  if (!token) {
     return (
       <div className={style.mainDiv}>
         <div className="flex flex-col gap-5">

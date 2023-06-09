@@ -10,7 +10,12 @@ import { UseMainContext } from '../../../context'
 import { useMutation } from '@tanstack/react-query'
 import LoadingComponent from '../../../components/Loading_component'
 const MakeBlogPostScreen = () => {
-  const { imgUrl, uploadFileToFirebaseStorage, navigate } = UseMainContext()
+  const {
+    imgUrl,
+    uploadFileToFirebaseStorage,
+    navigate,
+    setImgUrl,
+  } = UseMainContext()
   const { register, getValues, setValue } = useForm()
   // getiting values from hook form
   const title = getValues('title')
@@ -41,8 +46,8 @@ const MakeBlogPostScreen = () => {
       makePostMutation.mutate(obj)
       setLoading(false)
       navigate('/blog/posts')
+      setImgUrl('')
     }
-    console.log(imgUrl)
   }, [imgUrl])
 
   const style = {

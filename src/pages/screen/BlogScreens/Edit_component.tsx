@@ -2,9 +2,10 @@ import { DeletePost } from '../../../API/Blog-API'
 import { useMutation } from '@tanstack/react-query'
 import AlertComponent from '../../../components/Alert_component'
 import { FC, useState } from 'react'
+import axios from 'axios'
 
 type EditCompnentProps = {
-  _id: string | undefined
+  _id: string
 }
 
 const EditComponent: FC<EditCompnentProps> = ({ _id }) => {
@@ -13,6 +14,7 @@ const EditComponent: FC<EditCompnentProps> = ({ _id }) => {
   }
 
   const mutation = useMutation((id: string) => DeletePost(id))
+
   const handleDelete = (id: string) => {
     mutation.mutate(id)
 

@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 type AlertPropType = {
   handleFalsyValu: () => void
-  handleAction: (id: string | undefined) => void
-  _id: string | undefined
+  handleAction: (id: string ) => void
+  _id: string 
 }
 const AlertComponent: FC<AlertPropType> = ({
   handleFalsyValu,
