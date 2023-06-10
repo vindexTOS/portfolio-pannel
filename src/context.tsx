@@ -26,6 +26,9 @@ type Cell = {
   setHtmlImg: React.Dispatch<React.SetStateAction<String | null>>
   navigate: NavigateFunction
   setImgUrl: React.Dispatch<React.SetStateAction<string>>
+
+  isEdit: boolean
+  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Context = createContext<Cell | null>(null)
@@ -178,6 +181,12 @@ export const ContextProvider = ({
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
   }
+  // crud operations
+
+  //edit functionalitise out side of Edit_component.tsx
+
+  // checking if client clicked on edit button so we can convert post to edit
+  const [isEdit, setIsEdit] = useState<boolean>(false)
 
   return (
     <Context.Provider
@@ -198,6 +207,8 @@ export const ContextProvider = ({
         setImgUrl,
         setHtmlImg,
         navigate,
+        isEdit,
+        setIsEdit,
       }}
     >
       {children}
