@@ -17,10 +17,12 @@ const MakeBlogPostScreen = () => {
     setImgUrl,
   } = UseMainContext()
   const { register, getValues, setValue } = useForm()
+
   // getiting values from hook form
   const title = getValues('title')
   const post = getValues('post')
-  const type = getValues('type')
+
+  const [type, setType] = useState<string>('blog')
   // frop down for types selector
   const [dropDown, setDropDown] = useState<boolean>(false)
   const dropRef = React.useRef(null)
@@ -80,7 +82,7 @@ const MakeBlogPostScreen = () => {
         <ImgUpload />
         <div className={style.dropDown} onClick={() => setDropDown(!dropDown)}>
           <div className={style.blogDropDownWrapper}>
-            <h1>blog </h1>
+            <h1> {type}</h1>
             <div>{dropDown ? <MdArrowDropDown /> : <MdArrowDropUp />}</div>
           </div>
 
@@ -92,7 +94,7 @@ const MakeBlogPostScreen = () => {
               return (
                 <div
                   key={val}
-                  onClick={() => setValue('type', val)}
+                  onClick={() => setType(val)}
                   className={style.mappedItem}
                 >
                   {val}
