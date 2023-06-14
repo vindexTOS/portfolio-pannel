@@ -1,9 +1,8 @@
 import { DeletePost, FetchPosts } from '../../../API/Blog-API'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import AlertComponent from '../../../components/Alert_component'
-import { FC, useEffect, useState } from 'react'
-import { UseMainContext } from '../../../context'
-
+import { FC, useState } from 'react'
+ 
 type EditCompnentProps = {
   _id: string
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>

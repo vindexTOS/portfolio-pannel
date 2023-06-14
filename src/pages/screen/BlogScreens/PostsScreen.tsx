@@ -4,8 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useEffect } from 'react'
 import { BlogPostType } from '../../../types/blog-post-types'
 import PostComponent from './Post_component'
-import axios from 'axios'
-import Cookies from 'universal-cookie'
+ 
 const PostsScreen = () => {
   const blogPosts = useQuery({
     queryKey: ['blog'],
