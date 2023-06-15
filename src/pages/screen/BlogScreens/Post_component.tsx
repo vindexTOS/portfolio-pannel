@@ -32,8 +32,9 @@ const PostComponent: FC<BlogPostType> = (data) => {
   )
 
   const SaveUpdate = () => {
-    const body = new BlogPostClass(editTitle, editDec, img, editType)
+    const body = new BlogPostClass(editTitle, editDec, editType, img)
     mutation.mutate({ id: _id, body })
+    setIsEdit(false)
   }
 
   useOutClick(dropRef, dropDownHandler)
@@ -44,8 +45,9 @@ const PostComponent: FC<BlogPostType> = (data) => {
     img: `w-[500px] h-[500px] `,
     p: `break-words`,
     icon: `absolute right-20 top-5 text-[1.3rem]`,
-    input: `w-[60%] h-[2rem] px-2  rounded-[6px] `,
-    editTextArea: `w-[100%] p-5  h-[200] max-h-[500px] rounded-[6px]`,
+    input: `w-[60%] h-[3rem] px-2 text-gray-800  bg-green-200 rounded-[6px] `,
+    editTextArea: `w-[100%] p-5  text-gray-800  bg-green-200   h-[200] max-h-[500px] rounded-[6px]`,
+    btnWrapper: `flex w-[100%]`,
   }
   return (
     <div ref={dropRef} className={style.mainDiv}>
@@ -82,12 +84,20 @@ const PostComponent: FC<BlogPostType> = (data) => {
         ></textarea>
       )}
       {isEdit && (
-        <button
-          onClick={() => SaveUpdate()}
-          className="btn bg-green-400 text-white outline-none w-[100%]"
-        >
-          Save Changes
-        </button>
+        <div className={style.btnWrapper}>
+          <button
+            onClick={() => SaveUpdate()}
+            className="btn bg-green-400 text-white outline-none w-[50%]"
+          >
+            Save Changes
+          </button>
+          <button
+            onClick={() => SaveUpdate()}
+            className="btn bg-red-400 text-white outline-none w-[50%]"
+          >
+            Cancel
+          </button>
+        </div>
       )}
     </div>
   )

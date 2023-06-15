@@ -53,7 +53,8 @@ const MakeBlogPostScreen = () => {
   }, [imgUrl])
 
   const style = {
-    mainDiv: `flex flex-col items-center justify-center owerflow-y-scroll  w-[100%]  h-[90%] gap-2`,
+    mainDiv: `flex flex-col items-center justify-center owerflow-y-scroll  w-[100%]  h-[90%] gap-5`,
+    header: `text-[2rem] text-orange-400`,
     input: `max-w-[90%] w-[900%] bg-gray-200 shadow-md rounded-[20px] h-[3rem] outline-none p-2`,
     textArea: `max-w-[90%] w-[900%] h-[400px] resize-none bg-gray-200 shadow-md rounded-[20px] h-[3rem] outline-none p-5`,
     bottomWrapper: `w-[90%] h-[5rem] flex  justify-end items-center gap-2`,
@@ -66,6 +67,7 @@ const MakeBlogPostScreen = () => {
 
   return (
     <div className={style.mainDiv}>
+      <h1 className={style.header}>Make Blog Post </h1>
       <input
         {...register('title')}
         className={style.input}
