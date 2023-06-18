@@ -10,7 +10,7 @@ export class MainNavigation {
 export const NavigationLinks = [
   new MainNavigation('Blog', 'blog/make'),
   new MainNavigation('Learning', 'learning'),
-  new MainNavigation('Skills', 'skills'),
+  new MainNavigation('Skills', '/skills'),
   new MainNavigation('Projects', 'projects'),
   new MainNavigation('About', 'about'),
   new MainNavigation('Themes', 'Themes'),

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { UseMainContext } from '../../context'
 import { useQuery } from '@tanstack/react-query'
+
 import { Navigate } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 const LogIn = () => {

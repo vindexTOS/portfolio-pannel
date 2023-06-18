@@ -26,7 +26,8 @@ type Cell = {
   setHtmlImg: React.Dispatch<React.SetStateAction<String | null>>
   navigate: NavigateFunction
   setImgUrl: React.Dispatch<React.SetStateAction<string>>
-
+  handleDragOver: (e: React.DragEvent<HTMLLabelElement>) => void
+  handleDrop: (e: React.DragEvent<HTMLLabelElement>) => void
   isEdit: boolean
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -66,6 +67,20 @@ export const ContextProvider = ({
     newHtmlImg = URL.createObjectURL(e.dataTransfer.files[0])
     setImage(newImg)
     setHtmlImg(newHtmlImg)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault()
+  }
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault()
+    let newHtmlImg = htmlImg
+    let newImg = image
+    newHtmlImg = URL.createObjectURL(e.dataTransfer.files[0])
+    setHtmlImg(newHtmlImg)
+    newImg = e.dataTransfer.files[0]
+
+    setImage(newImg)
   }
 
   const removeImgFromHtml = () => {
@@ -197,6 +212,8 @@ export const ContextProvider = ({
         logout,
         postDummydata,
         user,
+        handleDragOver,
+        handleDrop,
         removeImgFromHtml,
         imgUploadDrag,
         imgUpload,

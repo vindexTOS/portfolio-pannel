@@ -4,6 +4,7 @@ import LogIn from './pages/auth/LogIn'
 import MainBlogScreen from './pages/screen/BlogScreens/MainBlogScreen'
 import MakeBlogPostScreen from './pages/screen/BlogScreens/MakeBlogPostScreen'
 import PostsScreen from './pages/screen/BlogScreens/PostsScreen'
+import MainSkillsScreen from './pages/screen/SKillsScreens/MainSkillsScreen'
 function App() {
   return (
     <Routes>
@@ -12,6 +13,7 @@ function App() {
           <Route path="make" element={<MakeBlogPostScreen />} />
           <Route path="posts" element={<PostsScreen />} />
         </Route>
+        <Route path="/skills" element={<MainSkillsScreen />} />
       </Route>
       <Route path="/login" element={<LogIn />} />
     </Routes>
