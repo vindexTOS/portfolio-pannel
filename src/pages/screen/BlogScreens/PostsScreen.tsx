@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { FetchPosts } from '../../../API/Blog-API'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useEffect } from 'react'
 import { BlogPostType } from '../../../types/blog-post-types'
 import PostComponent from './Post_component'

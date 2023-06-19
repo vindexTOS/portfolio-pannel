@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { UseMainContext } from '../../../context'
 import { FcImageFile } from 'react-icons/fc'
+import { RxDropdownMenu } from 'react-icons/rx'
 import { FaTrashAlt } from 'react-icons/fa'
 import { ChromePicker } from 'react-color'
 import { motion as m } from 'framer-motion'
@@ -8,6 +9,7 @@ import DefaulSkill from '../../../assets/DefaultSKill.png'
 import { SkillClass } from '../../../utils/SkillUtils'
 import { useMutation } from '@tanstack/react-query'
 import { PostSkill } from '../../../API/Skill-API'
+
 const MakeSkill = () => {
   const {
     imgUpload,
@@ -18,7 +20,8 @@ const MakeSkill = () => {
     removeImgFromHtml,
   } = UseMainContext()
   const style = {
-    form: `flex items-center justify-center gap-20 h-[500px] bg-gray-100 shadow-md w-[100%]  p-5  `,
+    form: `flex  items-center justify-center gap-20 h-[500px] bg-gray-100 shadow-md w-[100%]  p-5  relative `,
+    dropDownIcon: ` z-20 absolute text-gray-600 hover:text-gray-500 cursor-pointer text-[2rem] left-10 top-2`,
     inputDiv: `bg-gray-100 w-[280px] items-center flex  justify-center h-[2.2rem] rounded-[9px] shadow-md`,
     icon: `text-[40px]`,
     imgDropWrapper: ` gap-5 flex items-center justify-center flex-col `,
@@ -39,6 +42,7 @@ const MakeSkill = () => {
   const [color, setColor] = useState<string>('')
   const [backGroundColor, setBackGroudColor] = useState<string>('')
   const [title, setTitle] = useState<string>('')
+  const [dropDownForm, setDropDownForm] = useState<boolean>(false)
   const handleColor = (color: any) => {
     setColor(
       `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -66,84 +70,97 @@ const MakeSkill = () => {
     }
   }
   return (
-    <form
-      onSubmit={(e) => handleSkill(e)}
-      encType="multipart/form-data"
-      className={style.form}
-    >
-      <div className={style.imgDropWrapper}>
-        <div className={style.innerWrapper}>
-          <div className={style.inputDiv}>
-            <input
-              placeholder=" Skill Name"
-              className="outline-none bg-transparent w-[85%]"
-              onChange={(e) => setTitle(e.target.value)}
+    <section className="w-[100%] relative  h-[500px]">
+      <RxDropdownMenu
+        onClick={() => setDropDownForm(!dropDownForm)}
+        className={style.dropDownIcon}
+      />
+      <m.form
+        animate={{
+          y: dropDownForm ? -1200 : 0,
+          visibility: dropDownForm ? 'hidden' : 'visible',
+        }}
+        className={`${style.form} ${dropDownForm && 'hidden'}`}
+        onSubmit={(e) => handleSkill(e)}
+        encType="multipart/form-data"
+      >
+        <div className={style.imgDropWrapper}>
+          <div className={style.innerWrapper}>
+            <div className={style.inputDiv}>
+              <input
+                placeholder=" Skill Name"
+                className="outline-none bg-transparent w-[85%]"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <h1 className="text-gray-500 text-[1.5rem]">Drop Skills Photo</h1>
+            <p className="text-[10px]">
+              for best quality make sure photo is proparily cropped and its PNG
+            </p>
+            <label
+              onDragOver={(e) => handleDragOver(e)}
+              onDrop={handleDrop}
+              className={style.imgDrop}
+              htmlFor="img"
+            >
+              {!htmlImg ? (
+                <FcImageFile className={style.icon} />
+              ) : (
+                <div className="relative w-[100%] h-[100%] flex items-center justify-center z-20">
+                  <FaTrashAlt
+                    onClick={removeImgFromHtml}
+                    className={style.trashIcon}
+                  />
+                  <img className={style.htmlImg} src={htmlImg} />
+                </div>
+              )}
+              <h1 className="font-bold text-[14px]"></h1>
+              <p className="font-bold text-[10px] text-gray-400"></p>
+              <input
+                multiple
+                onChange={(e) => imgUpload(e)}
+                id="img"
+                className="hidden"
+                type="file"
+              />
+            </label>
+          </div>
+        </div>
+        <div className={style.colroWrapper}>
+          <div className={style.colorBGDIV}>
+            <h1>Hover Color</h1>
+
+            <ChromePicker color={color} onChangeComplete={handleColor} />
+          </div>
+          <div className={style.colorBGDIV}>
+            <h1>Back Ground Color</h1>
+            <ChromePicker
+              color={backGroundColor}
+              onChangeComplete={handleBackgroundColor}
             />
           </div>
-          <h1 className="text-gray-500 text-[1.5rem]">Drop Skills Photo</h1>
-          <p className="text-[10px]">
-            for best quality make sure photo is proparily cropped and its PNG
-          </p>
-          <label
-            onDragOver={(e) => handleDragOver(e)}
-            onDrop={handleDrop}
-            className={style.imgDrop}
-            htmlFor="img"
-          >
-            {!htmlImg ? (
-              <FcImageFile className={style.icon} />
-            ) : (
-              <div className="relative w-[100%] h-[100%] flex items-center justify-center z-20">
-                <FaTrashAlt
-                  onClick={removeImgFromHtml}
-                  className={style.trashIcon}
-                />
-                <img className={style.htmlImg} src={htmlImg} />
-              </div>
-            )}
-            <h1 className="font-bold text-[14px]"></h1>
-            <p className="font-bold text-[10px] text-gray-400"></p>
-            <input
-              multiple
-              onChange={(e) => imgUpload(e)}
-              id="img"
-              className="hidden"
-              type="file"
-            />
-          </label>
         </div>
-      </div>
-      <div className={style.colroWrapper}>
-        <div className={style.colorBGDIV}>
-          <h1>Hover Color</h1>
+        <div className={style.displayiconDiv}>
+          <p className="text-[12px]">Hover over to see changes</p>
+          <div className={style.singleSkill}>
+            <m.div
+              whileHover={{ backgroundColor: color }}
+              transition={{ duration: 1 }}
+              className={`${style.imgDiv}   `}
+              style={{ backgroundColor: backGroundColor }}
+            >
+              <img
+                src={htmlImg ? htmlImg : DefaulSkill}
+                className={style.img}
+              />
+            </m.div>
 
-          <ChromePicker color={color} onChangeComplete={handleColor} />
+            <h1 className={style.skillHeader}>{title}</h1>
+          </div>
         </div>
-        <div className={style.colorBGDIV}>
-          <h1>Back Ground Color</h1>
-          <ChromePicker
-            color={backGroundColor}
-            onChangeComplete={handleBackgroundColor}
-          />
-        </div>
-      </div>
-      <div className={style.displayiconDiv}>
-        <p className="text-[12px]">Hover over to see changes</p>
-        <div className={style.singleSkill}>
-          <m.div
-            whileHover={{ backgroundColor: color }}
-            transition={{ duration: 1 }}
-            className={`${style.imgDiv}   `}
-            style={{ backgroundColor: backGroundColor }}
-          >
-            <img src={htmlImg ? htmlImg : DefaulSkill} className={style.img} />
-          </m.div>
-
-          <h1 className={style.skillHeader}>{title}</h1>
-        </div>
-      </div>
-      <button type="submit">Save</button>
-    </form>
+        <button type="submit">Save</button>
+      </m.form>{' '}
+    </section>
   )
 }
 
