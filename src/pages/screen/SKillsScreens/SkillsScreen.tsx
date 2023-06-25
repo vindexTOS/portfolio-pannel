@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { FetchSkills, DeleteSkills } from '../../../API/Skill-API'
+import { FetchSkills, DeleteSkills, UpdateSkills } from '../../../API/Skill-API'
 import { motion as m } from 'framer-motion'
 import { FiTrash2 } from 'react-icons/fi'
 import { RiEdit2Line } from 'react-icons/ri'
+import { MdPhotoCamera } from 'react-icons/md'
+import { UseMainContext } from '../../../context'
+import { SkillsTypes } from '../../../types/skills-types'
+
+import useOutClick from '../../../Hooks/useOutClick'
 const SkillsScreen = () => {
   const style = {
     skillsDiv: ` flex flex-wrap   items-start justify-center w-[100%] h-[100%]  py-10 px-20 max_sm:p-0 gap-20  max_sm:gap-10 max_sm:h-[90%]  overflow-y-scroll `,
@@ -14,8 +19,10 @@ const SkillsScreen = () => {
     HoverDiv: `absolute w-[100%] h-[100%] gap-2 outline outline-[1px] outline-gray-400 rounded-[20px] flex p-2`,
     trashIcon: `text-[1.3rem] text-red-400 hover:text-red-600 cursor-pointer`,
     editIcon: `text-[1.4rem] text-blue-500 hover:text-blue-400 cursor-pointer`,
+    editableLabelPhoto: `relative flex items-center justify-center`,
+    PhotoIcon: `text-[3rem] text-pink-500  hover:text-pink-600 absolute  z-20 cursor-pointer `,
   }
-
+  const { imgUpload, image } = UseMainContext()
   const skills = useQuery({
     queryKey: ['skill'],
     queryFn: FetchSkills,
@@ -34,9 +41,19 @@ const SkillsScreen = () => {
 
   // mutation for delete and update
   const mutation = useMutation((_id: string) => DeleteSkills(_id))
-
+  const updateMutate = useMutation(
+    ({ _id, data }: { _id: string; data: SkillsTypes }) =>
+      UpdateSkills(_id, data),
+  )
   const handleDelete = (_id: string) => {
     mutation.mutate(_id)
+    setTimeout(() => {
+      refetch()
+    }, 1000)
+  }
+
+  const handleUpdate = ({ _id, data }: { _id: string; data: SkillsTypes }) => {
+    updateMutate.mutate({ _id, data })
     setTimeout(() => {
       refetch()
     }, 1000)
@@ -57,6 +74,22 @@ const SkillsScreen = () => {
     setMouseEnter(newMouseOver)
   }
 
+  const [Editable, setEditable] = useState<boolean[]>(
+    new Array(data?.data.length || 10).fill(false),
+  )
+
+  const EditableHanndle = (index: number) => {
+    let newEditableArr = [...Editable]
+    newEditableArr[index] = !newEditableArr[index]
+    setEditable(newEditableArr)
+  }
+
+  const cancelBoolean = () => {
+    setEditable(new Array(data?.data.length || 10).fill(false))
+  }
+  const editDropDownRef = useRef(null)
+  useOutClick(editDropDownRef, cancelBoolean)
+
   if (isLoading) {
     return <div>Loading</div>
   }
@@ -70,6 +103,7 @@ const SkillsScreen = () => {
         {data.data.map((val: any, i: number) => {
           return (
             <div
+              ref={editDropDownRef}
               onClick={() => console.log(val._id)}
               onMouseEnter={() => MouseOverHanndler(i)}
               onMouseLeave={() => MouseLeaveHannlder(i)}
@@ -87,7 +121,11 @@ const SkillsScreen = () => {
                   title="Delete Skill"
                   className={style.trashIcon}
                 />
-                <RiEdit2Line title="Edit Skill" className={style.editIcon} />
+                <RiEdit2Line
+                  onClick={() => EditableHanndle(i)}
+                  title="Edit Skill"
+                  className={style.editIcon}
+                />
               </m.div>
               <m.div
                 whileHover={{ backgroundColor: `${val.color}` }}
@@ -95,10 +133,36 @@ const SkillsScreen = () => {
                 className={`${style.imgDiv}   `}
                 style={{ backgroundColor: `${val.bgo}` }}
               >
-                <img src={val.icon} className={style.img} />
+                {!Editable[i] ? (
+                  <img src={val.icon} className={style.img} />
+                ) : (
+                  <label className={style.editableLabelPhoto} htmlFor="img">
+                    <input
+                      multiple
+                      onChange={(e) => imgUpload(e)}
+                      id="img"
+                      className="hidden"
+                      type="file"
+                    />
+                    <MdPhotoCamera className={style.PhotoIcon} />
+                    <img src={val.icon} className={style.img} />
+                  </label>
+                )}
               </m.div>
 
-              <h1 className={style.skillHeader}>{val.title}</h1>
+              {!Editable[i] ? (
+                <h1 className={style.skillHeader}>{val.title}</h1>
+              ) : (
+                <div className="flex flex-col z-20">
+                  <input
+                    className="h-[2rem] rounded-[12px] text-center bg-gray-500"
+                    placeholder={val.title}
+                  />
+                  <button className="btn btn-success text-white btn-sm cursor-pointer">
+                    Save Change
+                  </button>
+                </div>
+              )}
             </div>
           )
         })}
