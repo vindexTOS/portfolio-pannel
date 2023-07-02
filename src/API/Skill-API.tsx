@@ -19,6 +19,9 @@ export const DeleteSkills = async (_id: string) => {
 }
 
 export const UpdateSkills = async (_id: string, data: SkillsTypes) => {
-  const skill = await axios.patch(`${baseUrl}/skill/post/${_id}`, data)
+  const skill = await axios
+    .patch(`${baseUrl}/skill/post/${_id}`, data)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err))
   return skill
 }

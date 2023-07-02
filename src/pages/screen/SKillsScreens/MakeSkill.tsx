@@ -42,7 +42,7 @@ const MakeSkill = () => {
   const [color, setColor] = useState<string>('')
   const [backGroundColor, setBackGroudColor] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  const [dropDownForm, setDropDownForm] = useState<boolean>(false)
+  const [dropDownForm, setDropDownForm] = useState<boolean>(true)
   const handleColor = (color: any) => {
     setColor(
       `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
@@ -64,9 +64,7 @@ const MakeSkill = () => {
       formData.append('file', image)
       formData.append('color', color)
       formData.append('bgo', backGroundColor)
-      const data = new SkillClass(title, image, color, backGroundColor)
       makeSkillMutation.mutate(formData)
-      console.log(data)
     }
   }
   return (

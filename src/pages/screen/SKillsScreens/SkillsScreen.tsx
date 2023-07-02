@@ -22,7 +22,7 @@ const SkillsScreen = () => {
     editableLabelPhoto: `relative flex items-center justify-center`,
     PhotoIcon: `text-[3rem] text-pink-500  hover:text-pink-600 absolute  z-20 cursor-pointer `,
   }
-  const { imgUpload, image } = UseMainContext()
+  const { imgUpload, image, htmlImg, setImgUrl, setHtmlImg } = UseMainContext()
   const skills = useQuery({
     queryKey: ['skill'],
     queryFn: FetchSkills,
@@ -33,8 +33,24 @@ const SkillsScreen = () => {
     },
   })
 
-  const { data, isLoading, isError, refetch } = skills
+  const { data, isLoading, isError, refetch, isSuccess } = skills
+  // editable
 
+  const [Editable, setEditable] = useState<boolean[]>(
+    new Array(data?.data.length || 10).fill(false),
+  )
+
+  const EditableHanndle = (index: number) => {
+    let newEditableArr = [...Editable]
+    newEditableArr[index] = !newEditableArr[index]
+    setEditable(newEditableArr)
+  }
+
+  const cancelBoolean = () => {
+    setEditable(new Array(data?.data.length || 10).fill(false))
+  }
+  const editDropDownRef = useRef(null)
+  useOutClick(editDropDownRef, cancelBoolean)
   useEffect(() => {
     refetch()
   }, [])
@@ -42,8 +58,7 @@ const SkillsScreen = () => {
   // mutation for delete and update
   const mutation = useMutation((_id: string) => DeleteSkills(_id))
   const updateMutate = useMutation(
-    ({ _id, data }: { _id: string; data: SkillsTypes }) =>
-      UpdateSkills(_id, data),
+    ({ _id, data }: { _id: string; data: any }) => UpdateSkills(_id, data),
   )
   const handleDelete = (_id: string) => {
     mutation.mutate(_id)
@@ -51,10 +66,23 @@ const SkillsScreen = () => {
       refetch()
     }, 1000)
   }
+  const [title, setTitle] = useState<string>('')
 
-  const handleUpdate = ({ _id, data }: { _id: string; data: SkillsTypes }) => {
-    updateMutate.mutate({ _id, data })
+  const handleUpdate = (_id: string, oldName: string, index: number) => {
+    let newEditableArr = [...Editable]
+
+    const formData = new FormData()
+    if (image) {
+      formData.append('file', image)
+    }
+
+    formData.append('title', title)
+    updateMutate.mutate({ _id, data: formData })
     setTimeout(() => {
+      newEditableArr[index] = false
+      setEditable(newEditableArr)
+      setImgUrl('')
+      setHtmlImg(null)
       refetch()
     }, 1000)
   }
@@ -74,22 +102,6 @@ const SkillsScreen = () => {
     setMouseEnter(newMouseOver)
   }
 
-  const [Editable, setEditable] = useState<boolean[]>(
-    new Array(data?.data.length || 10).fill(false),
-  )
-
-  const EditableHanndle = (index: number) => {
-    let newEditableArr = [...Editable]
-    newEditableArr[index] = !newEditableArr[index]
-    setEditable(newEditableArr)
-  }
-
-  const cancelBoolean = () => {
-    setEditable(new Array(data?.data.length || 10).fill(false))
-  }
-  const editDropDownRef = useRef(null)
-  useOutClick(editDropDownRef, cancelBoolean)
-
   if (isLoading) {
     return <div>Loading</div>
   }
@@ -99,7 +111,12 @@ const SkillsScreen = () => {
   }
   if (data) {
     return (
-      <div className={style.skillsDiv}>
+      <form
+        ref={editDropDownRef}
+        onSubmit={(e) => e.preventDefault()}
+        encType="multipart/form-data"
+        className={style.skillsDiv}
+      >
         {data.data.map((val: any, i: number) => {
           return (
             <div
@@ -145,7 +162,10 @@ const SkillsScreen = () => {
                       type="file"
                     />
                     <MdPhotoCamera className={style.PhotoIcon} />
-                    <img src={val.icon} className={style.img} />
+                    <img
+                      src={htmlImg ? htmlImg : val.icon}
+                      className={style.img}
+                    />
                   </label>
                 )}
               </m.div>
@@ -155,10 +175,14 @@ const SkillsScreen = () => {
               ) : (
                 <div className="flex flex-col z-20">
                   <input
+                    onChange={(e) => setTitle(e.target.value)}
                     className="h-[2rem] rounded-[12px] text-center bg-gray-500"
                     placeholder={val.title}
                   />
-                  <button className="btn btn-success text-white btn-sm cursor-pointer">
+                  <button
+                    onClick={() => handleUpdate(val._id, val.name, i)}
+                    className="btn btn-success text-white btn-sm cursor-pointer"
+                  >
                     Save Change
                   </button>
                 </div>
@@ -166,7 +190,7 @@ const SkillsScreen = () => {
             </div>
           )
         })}
-      </div>
+      </form>
     )
   }
 }
